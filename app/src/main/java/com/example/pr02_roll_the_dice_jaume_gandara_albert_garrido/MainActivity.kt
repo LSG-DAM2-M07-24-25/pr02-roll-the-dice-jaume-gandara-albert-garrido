@@ -44,14 +44,13 @@ fun MainLayout(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Imatge de títol
-        /*Image(
-            painter = painterResource(id = R.drawable.your_title_image), // TODO: Afegir la imatge de la Salle Gràcia
+        Image(
+            painter = painterResource(id = R.drawable.lsg_logo),
             contentDescription = "Imatge de títol",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp) // TODO: Canviar l'alçada un cop tinguem les imatges
-        )*/
+                .height(300.dp)
+        )
 
         // Botó principal
         Button(onClick = { /* Acció del botó */ }, modifier = Modifier.fillMaxWidth()) {
