@@ -1,6 +1,8 @@
 package com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
+import java.util.Timer
+import kotlin.concurrent.scheduleAtFixedRate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,18 +59,48 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 .height(300.dp)
         )
 
-        // Botó principal
-        Button(onClick = { /* Acció del botó */ }, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {
+            val handler = Handler(Looper.getMainLooper())
+
+            val runnable = object : Runnable {
+                override fun run() {
+                    diceIndex1 = getRandomDice()
+                    diceIndex2 = getRandomDice()
+                    handler.postDelayed(this, 100)
+                }
+            }
+
+            handler.post(runnable)
+
+            handler.postDelayed({
+                handler.removeCallbacks(runnable)
+                diceIndex1 = getRandomDice()
+                diceIndex2 = getRandomDice()
+            }, 2000)
+        }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Botó Principal")
         }
 
-        // TODO: Afegir les imatges dels daus
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
-                diceIndex1 = getRandomDice()
+                val handler = Handler(Looper.getMainLooper())
+
+                val runnable = object : Runnable {
+                    override fun run() {
+                        diceIndex1 = getRandomDice()
+                        handler.postDelayed(this, 100)
+                    }
+                }
+
+                handler.post(runnable)
+
+                handler.postDelayed({
+                    handler.removeCallbacks(runnable)
+                    diceIndex1 = getRandomDice()
+                }, 2000)
             },  modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),) {
@@ -78,7 +112,21 @@ fun MainLayout(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = {
-                diceIndex2 = getRandomDice()
+                val handler = Handler(Looper.getMainLooper())
+
+                val runnable = object : Runnable {
+                    override fun run() {
+                        diceIndex2 = getRandomDice()
+                        handler.postDelayed(this, 100)
+                    }
+                }
+
+                handler.post(runnable)
+
+                handler.postDelayed({
+                    handler.removeCallbacks(runnable)
+                    diceIndex2 = getRandomDice()
+                }, 2000)
             },modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
