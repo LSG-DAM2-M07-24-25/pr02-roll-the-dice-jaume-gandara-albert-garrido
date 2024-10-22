@@ -7,12 +7,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,21 +67,26 @@ fun MainLayout(modifier: Modifier = Modifier) {
         ) {
             Button(onClick = {
                 diceIndex1 = getRandomDice()
-            }, modifier = Modifier.weight(1f)) {
+            },  modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),) {
                 Image(
                     painter = painterResource(id = getDiceImage(diceIndex1)),
                     contentDescription = "Dau 1",
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(144.dp)
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = {
                 diceIndex2 = getRandomDice()
-            }, modifier = Modifier.weight(1f)) {
+            },modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+            ) {
                 Image(
                     painter = painterResource(id = getDiceImage(diceIndex2)),
                     contentDescription = "Dau 2",
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(144.dp)
                 )
             }
         }
