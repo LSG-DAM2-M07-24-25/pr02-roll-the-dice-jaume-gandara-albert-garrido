@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
 
 class MainActivity : ComponentActivity() {
@@ -62,7 +63,9 @@ fun MainLayout(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO: Acció del botó 1 */ }, modifier = Modifier.weight(1f)) {
+            Button(onClick = {
+                diceIndex1 = getRandomDice()
+            }, modifier = Modifier.weight(1f)) {
                 Image(
                     painter = painterResource(id = getDiceImage(diceIndex1)),
                     contentDescription = "Dau 1",
@@ -70,7 +73,9 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = { /* TODO: Acció del botó 2 */ }, modifier = Modifier.weight(1f)) {
+            Button(onClick = {
+                diceIndex2 = getRandomDice()
+            }, modifier = Modifier.weight(1f)) {
                 Image(
                     painter = painterResource(id = getDiceImage(diceIndex2)),
                     contentDescription = "Dau 2",
@@ -91,6 +96,9 @@ fun getDiceImage(index: Int): Int {
         6 -> R.drawable.dice_6
         else -> R.drawable.dice_1
     }
+}
+fun getRandomDice(): Int {
+    return Random.nextInt(1, 7)
 }
 
 @Preview(showBackground = true)
