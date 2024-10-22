@@ -3,6 +3,7 @@ package com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,19 +12,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
-import java.util.Timer
-import kotlin.concurrent.scheduleAtFixedRate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +42,7 @@ class MainActivity : ComponentActivity() {
 fun MainLayout(modifier: Modifier = Modifier) {
     var diceIndex1 by remember { mutableStateOf(1) }
     var diceIndex2 by remember { mutableStateOf(1) }
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -76,6 +76,10 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 handler.removeCallbacks(runnable)
                 diceIndex1 = getRandomDice()
                 diceIndex2 = getRandomDice()
+
+                if (diceIndex1 == diceIndex2) {
+                    Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                }
             }, 2000)
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Botó Principal")
@@ -100,8 +104,12 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 handler.postDelayed({
                     handler.removeCallbacks(runnable)
                     diceIndex1 = getRandomDice()
+
+                    if (diceIndex1 == diceIndex2) {
+                        Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                    }
                 }, 2000)
-            },  modifier = Modifier.weight(1f),
+            }, modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),) {
                 Image(
@@ -126,8 +134,12 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 handler.postDelayed({
                     handler.removeCallbacks(runnable)
                     diceIndex2 = getRandomDice()
+
+                    if (diceIndex1 == diceIndex2) {
+                        Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                    }
                 }, 2000)
-            },modifier = Modifier.weight(1f),
+            }, modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
             ) {
@@ -152,6 +164,7 @@ fun getDiceImage(index: Int): Int {
         else -> R.drawable.dice_1
     }
 }
+
 fun getRandomDice(): Int {
     return Random.nextInt(1, 7)
 }
