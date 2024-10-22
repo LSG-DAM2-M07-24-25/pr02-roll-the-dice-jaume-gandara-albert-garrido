@@ -64,42 +64,24 @@ fun MainLayout(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = { /* TODO: Acció del botó 1 */ }, modifier = Modifier.weight(1f)) {
-                /*Image(
+                Image(
                     painter = painterResource(id = getDiceImage(diceIndex1)),
                     contentDescription = "Dau 1",
                     modifier = Modifier.size(48.dp)
-                )*/
+                )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = { /* TODO: Acció del botó 2 */ }, modifier = Modifier.weight(1f)) {
-                /*Image(
+                Image(
                     painter = painterResource(id = getDiceImage(diceIndex2)),
                     contentDescription = "Dau 2",
                     modifier = Modifier.size(48.dp)
-                )*/
+                )
             }
         }
-
-        Text(text = "Selecciona el dau 1: $diceIndex1", modifier = Modifier.padding(vertical = 16.dp))
-        Slider(
-            value = diceIndex1.toFloat(),
-            onValueChange = { diceIndex1 = it.toInt() },
-            valueRange = 1f..6f,
-            steps = 5,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(text = "Selecciona el dau 2: $diceIndex2", modifier = Modifier.padding(vertical = 16.dp))
-        Slider(
-            value = diceIndex2.toFloat(),
-            onValueChange = { diceIndex2 = it.toInt() },
-            valueRange = 1f..6f,
-            steps = 5,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
-/*
+
 fun getDiceImage(index: Int): Int {
     return when (index) {
         1 -> R.drawable.dice_1
@@ -111,7 +93,7 @@ fun getDiceImage(index: Int): Int {
         else -> R.drawable.dice_1
     }
 }
-*/
+
 @Preview(showBackground = true)
 @Composable
 fun MainLayoutPreview() {
