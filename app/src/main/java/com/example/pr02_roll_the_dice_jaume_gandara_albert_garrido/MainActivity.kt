@@ -1,21 +1,34 @@
 package com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,49 +47,202 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainLayout(modifier: Modifier = Modifier) {
-    var diceIndex1 by remember { mutableStateOf(1) }
-    var diceIndex2 by remember { mutableStateOf(1) }
+    var diceIndex1 by remember { mutableStateOf(5) }
+    var diceIndex2 by remember { mutableStateOf(5) }
+    var credits by remember { mutableStateOf(10) }
+    var botonsDown by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box (
+        modifier = modifier.fillMaxSize().padding()
     ) {
-        // Imatge de títol
-        /*Image(
-            painter = painterResource(id = R.drawable.your_title_image), // TODO: Afegir la imatge de la Salle Gràcia
-            contentDescription = "Imatge de títol",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp) // TODO: Canviar l'alçada un cop tinguem les imatges
-        )*/
+        Image(
+            painter = painterResource(id = R.drawable.tapestry),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-        // Botó principal
-        Button(onClick = { /* Acció del botó */ }, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Botó Principal")
-        }
-
-        // TODO: Afegir les imatges dels daus
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(onClick = { /* TODO: Acció del botó 1 */ }, modifier = Modifier.weight(1f)) {
-                Image(
-                    painter = painterResource(id = getDiceImage(diceIndex1)),
-                    contentDescription = "Dau 1",
-                    modifier = Modifier.size(48.dp)
+            Image(
+                painter = painterResource(id = R.drawable.lsg_logo),
+                contentDescription = "Imatge de títol",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            )
+
+            Row {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = "Icona credits",
+                    tint = Color.Red,
+                    modifier = Modifier.size(40.dp)
+                )
+                Text(
+                    text = "$credits",
+                    color = Color.White,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = { /* TODO: Acció del botó 2 */ }, modifier = Modifier.weight(1f)) {
-                Image(
-                    painter = painterResource(id = getDiceImage(diceIndex2)),
-                    contentDescription = "Dau 2",
-                    modifier = Modifier.size(48.dp)
+
+            Button(
+                onClick = {
+                    if (credits > 0 && !botonsDown) {
+                        credits -= 1
+                        botonsDown = true
+                        val handler = Handler(Looper.getMainLooper())
+
+                        val runnable = object : Runnable {
+                            override fun run() {
+                                diceIndex1 = getRandomDice()
+                                diceIndex2 = getRandomDice()
+                                handler.postDelayed(this, 100)
+                            }
+                        }
+
+                        handler.post(runnable)
+
+                        handler.postDelayed({
+                            handler.removeCallbacks(runnable)
+                            diceIndex1 = getRandomDice()
+                            diceIndex2 = getRandomDice()
+
+                            if (diceIndex1 == diceIndex2) {
+                                Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                                credits += if (diceIndex1 == 6) {
+                                    10
+                                } else {
+                                    5
+                                }
+                            }
+                            botonsDown = false
+                        }, 2000)
+                    }
+                },
+                modifier = Modifier.height(60.dp).width(325.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                shape = RoundedCornerShape(0.dp)
+            ) {
+                Text(
+                    text = "Tirar daus",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
+            }
+
+            Button(onClick = {
+                diceIndex1 = 5
+                diceIndex2 = 5
+                credits = 10
+            },
+                modifier = Modifier.height(60.dp).width(325.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                shape = RoundedCornerShape(0.dp)
+            ) {
+                Text(
+                    text = "Reiniciar joc",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    onClick = {
+                        if (credits > 1 && !botonsDown) {
+                            credits -= 2
+                            botonsDown = true
+                            val handler = Handler(Looper.getMainLooper())
+
+                            val runnable = object : Runnable {
+                                override fun run() {
+                                    diceIndex1 = getRandomDice()
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+
+                            handler.post(runnable)
+
+                            handler.postDelayed({
+                                handler.removeCallbacks(runnable)
+                                diceIndex1 = getRandomDice()
+
+                                if (diceIndex1 == diceIndex2) {
+                                    Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                                    credits += if (diceIndex1 == 6) {
+                                        10
+                                    } else {
+                                        5
+                                    }
+                                }
+                                botonsDown = false
+                            }, 2000)
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                ) {
+                    Image(
+                        painter = painterResource(id = getDiceImage(diceIndex1)),
+                        contentDescription = "Dau 1",
+                        modifier = Modifier.size(144.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = {
+                        if (credits > 1 && !botonsDown) {
+                            credits -= 2
+                            botonsDown = true
+                            val handler = Handler(Looper.getMainLooper())
+
+                            val runnable = object : Runnable {
+                                override fun run() {
+                                    diceIndex2 = getRandomDice()
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+
+                            handler.post(runnable)
+
+                            handler.postDelayed({
+                                handler.removeCallbacks(runnable)
+                                diceIndex2 = getRandomDice()
+
+                                if (diceIndex1 == diceIndex2) {
+                                    Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                                    credits += if (diceIndex1 == 6) {
+                                        10
+                                    } else {
+                                        5
+                                    }
+                                }
+                                botonsDown = false
+                            }, 2000)
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                ) {
+                    Image(
+                        painter = painterResource(id = getDiceImage(diceIndex2)),
+                        contentDescription = "Dau 2",
+                        modifier = Modifier.size(144.dp)
+                    )
+                }
             }
         }
     }
@@ -92,6 +258,10 @@ fun getDiceImage(index: Int): Int {
         6 -> R.drawable.dice_6
         else -> R.drawable.dice_1
     }
+}
+
+fun getRandomDice(): Int {
+    return Random.nextInt(1, 7)
 }
 
 @Preview(showBackground = true)
