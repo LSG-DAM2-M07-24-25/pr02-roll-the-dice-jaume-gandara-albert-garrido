@@ -22,6 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.random.Random
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +45,7 @@ class MainActivity : ComponentActivity() {
 fun MainLayout(modifier: Modifier = Modifier) {
     var diceIndex1 by remember { mutableStateOf(1) }
     var diceIndex2 by remember { mutableStateOf(1) }
+    var credits by remember { mutableStateOf(10) }
     val context = LocalContext.current
 
     Column(
@@ -51,10 +55,6 @@ fun MainLayout(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Creditos:",
-            modifier = Modifier.align(Alignment.Start)
-        )
         Image(
             painter = painterResource(id = R.drawable.lsg_logo),
             contentDescription = "Imatge de títol",
@@ -63,7 +63,17 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 .height(300.dp)
         )
 
+        Row {
+            Icon(
+                imageVector = Icons.Filled.Star,
+                contentDescription = "Icona credits",
+                tint = Color.Red
+            )
+            Text(text = "$credits")
+        }
+
         Button(onClick = {
+            credits -= 1
             val handler = Handler(Looper.getMainLooper())
 
             val runnable = object : Runnable {
@@ -83,14 +93,17 @@ fun MainLayout(modifier: Modifier = Modifier) {
 
                 if (diceIndex1 == diceIndex2) {
                     Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                    credits += if (diceIndex1 == 6) { 10 } else { 5 }
                 }
             }, 2000)
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Tirar daus")
         }
+
         Button(onClick = {
             diceIndex1 = 1
             diceIndex2 = 7
+            credits = 10
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Reiniciar joc")
         }
@@ -100,6 +113,7 @@ fun MainLayout(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
+                credits -= 2
                 val handler = Handler(Looper.getMainLooper())
 
                 val runnable = object : Runnable {
@@ -117,6 +131,7 @@ fun MainLayout(modifier: Modifier = Modifier) {
 
                     if (diceIndex1 == diceIndex2) {
                         Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                        credits += if (diceIndex1 == 6) { 10 } else { 5 }
                     }
                 }, 2000)
             }, modifier = Modifier.weight(1f),
@@ -130,6 +145,7 @@ fun MainLayout(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = {
+                credits -= 2
                 val handler = Handler(Looper.getMainLooper())
 
                 val runnable = object : Runnable {
@@ -147,6 +163,7 @@ fun MainLayout(modifier: Modifier = Modifier) {
 
                     if (diceIndex1 == diceIndex2) {
                         Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                        credits += if (diceIndex1 == 6) { 10 } else { 5 }
                     }
                 }, 2000)
             }, modifier = Modifier.weight(1f),
