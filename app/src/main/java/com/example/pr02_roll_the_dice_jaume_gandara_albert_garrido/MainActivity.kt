@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -25,8 +26,9 @@ import kotlin.random.Random
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.pr02_roll_the_dice_jaume_gandara_albert_garrido.ui.theme.Pr02rollthedicejaumegandaraalbertgarridoTheme
 
 class MainActivity : ComponentActivity() {
@@ -45,8 +47,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainLayout(modifier: Modifier = Modifier) {
-    var diceIndex1 by remember { mutableStateOf(1) }
-    var diceIndex2 by remember { mutableStateOf(1) }
+    var diceIndex1 by remember { mutableStateOf(5) }
+    var diceIndex2 by remember { mutableStateOf(5) }
     var credits by remember { mutableStateOf(10) }
     var botonsDown by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -80,53 +82,76 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Icona credits",
-                    tint = Color.Red
+                    tint = Color.Red,
+                    modifier = Modifier.size(40.dp)
                 )
-                Text(text = "$credits")
+                Text(
+                    text = "$credits",
+                    color = Color.White,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                )
             }
 
-            Button(onClick = {
-                if (credits > 0 && !botonsDown) {
-                    credits -= 1
-                    botonsDown = true
-                    val handler = Handler(Looper.getMainLooper())
+            Button(
+                onClick = {
+                    if (credits > 0 && !botonsDown) {
+                        credits -= 1
+                        botonsDown = true
+                        val handler = Handler(Looper.getMainLooper())
 
-                    val runnable = object : Runnable {
-                        override fun run() {
-                            diceIndex1 = getRandomDice()
-                            diceIndex2 = getRandomDice()
-                            handler.postDelayed(this, 100)
-                        }
-                    }
-
-                    handler.post(runnable)
-
-                    handler.postDelayed({
-                        handler.removeCallbacks(runnable)
-                        diceIndex1 = getRandomDice()
-                        diceIndex2 = getRandomDice()
-
-                        if (diceIndex1 == diceIndex2) {
-                            Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
-                            credits += if (diceIndex1 == 6) {
-                                10
-                            } else {
-                                5
+                        val runnable = object : Runnable {
+                            override fun run() {
+                                diceIndex1 = getRandomDice()
+                                diceIndex2 = getRandomDice()
+                                handler.postDelayed(this, 100)
                             }
                         }
-                        botonsDown = false
-                    }, 2000)
-                }
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Tirar daus")
+
+                        handler.post(runnable)
+
+                        handler.postDelayed({
+                            handler.removeCallbacks(runnable)
+                            diceIndex1 = getRandomDice()
+                            diceIndex2 = getRandomDice()
+
+                            if (diceIndex1 == diceIndex2) {
+                                Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                                credits += if (diceIndex1 == 6) {
+                                    10
+                                } else {
+                                    5
+                                }
+                            }
+                            botonsDown = false
+                        }, 2000)
+                    }
+                },
+                modifier = Modifier.height(60.dp).width(325.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                shape = RoundedCornerShape(0.dp)
+            ) {
+                Text(
+                    text = "Tirar daus",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Button(onClick = {
-                diceIndex1 = 1
-                diceIndex2 = 1
+                diceIndex1 = 5
+                diceIndex2 = 5
                 credits = 10
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Reiniciar joc")
+            },
+                modifier = Modifier.height(60.dp).width(325.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                shape = RoundedCornerShape(0.dp)
+            ) {
+                Text(
+                    text = "Reiniciar joc",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Row(
