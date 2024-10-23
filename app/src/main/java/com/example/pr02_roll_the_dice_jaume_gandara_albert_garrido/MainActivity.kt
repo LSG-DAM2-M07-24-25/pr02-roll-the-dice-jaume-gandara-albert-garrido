@@ -73,29 +73,35 @@ fun MainLayout(modifier: Modifier = Modifier) {
         }
 
         Button(onClick = {
-            credits -= 1
-            val handler = Handler(Looper.getMainLooper())
+            if (credits > 0) {
+                credits -= 1
+                val handler = Handler(Looper.getMainLooper())
 
-            val runnable = object : Runnable {
-                override fun run() {
+                val runnable = object : Runnable {
+                    override fun run() {
+                        diceIndex1 = getRandomDice()
+                        diceIndex2 = getRandomDice()
+                        handler.postDelayed(this, 100)
+                    }
+                }
+
+                handler.post(runnable)
+
+                handler.postDelayed({
+                    handler.removeCallbacks(runnable)
                     diceIndex1 = getRandomDice()
                     diceIndex2 = getRandomDice()
-                    handler.postDelayed(this, 100)
-                }
+
+                    if (diceIndex1 == diceIndex2) {
+                        Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                        credits += if (diceIndex1 == 6) {
+                            10
+                        } else {
+                            5
+                        }
+                    }
+                }, 2000)
             }
-
-            handler.post(runnable)
-
-            handler.postDelayed({
-                handler.removeCallbacks(runnable)
-                diceIndex1 = getRandomDice()
-                diceIndex2 = getRandomDice()
-
-                if (diceIndex1 == diceIndex2) {
-                    Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
-                    credits += if (diceIndex1 == 6) { 10 } else { 5 }
-                }
-            }, 2000)
         }, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Tirar daus")
         }
@@ -113,27 +119,33 @@ fun MainLayout(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
-                credits -= 2
-                val handler = Handler(Looper.getMainLooper())
+                if (credits > 0) {
+                    credits -= 2
+                    val handler = Handler(Looper.getMainLooper())
 
-                val runnable = object : Runnable {
-                    override fun run() {
+                    val runnable = object : Runnable {
+                        override fun run() {
+                            diceIndex1 = getRandomDice()
+                            handler.postDelayed(this, 100)
+                        }
+                    }
+
+                    handler.post(runnable)
+
+                    handler.postDelayed({
+                        handler.removeCallbacks(runnable)
                         diceIndex1 = getRandomDice()
-                        handler.postDelayed(this, 100)
-                    }
+
+                        if (diceIndex1 == diceIndex2) {
+                            Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                            credits += if (diceIndex1 == 6) {
+                                10
+                            } else {
+                                5
+                            }
+                        }
+                    }, 2000)
                 }
-
-                handler.post(runnable)
-
-                handler.postDelayed({
-                    handler.removeCallbacks(runnable)
-                    diceIndex1 = getRandomDice()
-
-                    if (diceIndex1 == diceIndex2) {
-                        Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
-                        credits += if (diceIndex1 == 6) { 10 } else { 5 }
-                    }
-                }, 2000)
             }, modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),) {
@@ -145,27 +157,33 @@ fun MainLayout(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = {
-                credits -= 2
-                val handler = Handler(Looper.getMainLooper())
+                if (credits > 0) {
+                    credits -= 2
+                    val handler = Handler(Looper.getMainLooper())
 
-                val runnable = object : Runnable {
-                    override fun run() {
+                    val runnable = object : Runnable {
+                        override fun run() {
+                            diceIndex2 = getRandomDice()
+                            handler.postDelayed(this, 100)
+                        }
+                    }
+
+                    handler.post(runnable)
+
+                    handler.postDelayed({
+                        handler.removeCallbacks(runnable)
                         diceIndex2 = getRandomDice()
-                        handler.postDelayed(this, 100)
-                    }
+
+                        if (diceIndex1 == diceIndex2) {
+                            Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
+                            credits += if (diceIndex1 == 6) {
+                                10
+                            } else {
+                                5
+                            }
+                        }
+                    }, 2000)
                 }
-
-                handler.post(runnable)
-
-                handler.postDelayed({
-                    handler.removeCallbacks(runnable)
-                    diceIndex2 = getRandomDice()
-
-                    if (diceIndex1 == diceIndex2) {
-                        Toast.makeText(context, "JACKPOT!", Toast.LENGTH_SHORT).show()
-                        credits += if (diceIndex1 == 6) { 10 } else { 5 }
-                    }
-                }, 2000)
             }, modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
