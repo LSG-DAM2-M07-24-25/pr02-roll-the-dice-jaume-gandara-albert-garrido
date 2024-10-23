@@ -51,6 +51,10 @@ fun MainLayout(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Creditos:",
+            modifier = Modifier.align(Alignment.Start)
+        )
         Image(
             painter = painterResource(id = R.drawable.lsg_logo),
             contentDescription = "Imatge de títol",
@@ -82,7 +86,13 @@ fun MainLayout(modifier: Modifier = Modifier) {
                 }
             }, 2000)
         }, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Botó Principal")
+            Text(text = "Tirar daus")
+        }
+        Button(onClick = {
+            diceIndex1 = 1
+            diceIndex2 = 7
+        }, modifier = Modifier.fillMaxWidth()) {
+            Text(text = "Reiniciar joc")
         }
 
         Row(
